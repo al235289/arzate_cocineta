@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cocinetas de Madera · Artesanía en cada detalle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Oakstone Cabinets · Craftsmanship in Every Detail</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    /* ── Variables ── */
     :root {
       --hueso:     #F7F0E3;
       --crema:     #EDE0C8;
       --madera:    #3B2A1A;
+      --gold:      #C9A84C;
+      --gold-light:#E2C97E;
       --musgo:     #5C7A4E;
       --musgo-osc: #4A6340;
       --texto:     #2A1E10;
       --gris-suave:#A09080;
       --wa-verde:  #25D366;
       --wa-osc:    #1DA851;
+      --header-h:  64px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -31,66 +32,193 @@
       font-family: 'Inter', sans-serif;
       font-size: 16px;
       line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    /* ── HERO ── */
-    .hero {
-      background: var(--madera);
-      color: var(--crema);
-      padding: 80px 24px 64px;
-      text-align: center;
+    /* ══════════════════════════════════
+       HEADER STICKY
+    ══════════════════════════════════ */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      background: rgba(20, 12, 4, 0.0);
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+      transition: background 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .site-header.scrolled {
+      background: rgba(20, 12, 4, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.35);
+    }
+
+    .header-logo {
+      height: 44px;
+      width: auto;
+      display: block;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+      transition: transform 0.2s;
+    }
+    .site-header:not(.scrolled) .header-logo { height: 50px; }
+
+    .header-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--wa-verde);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 10px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 2px 12px rgba(37,211,102,0.35);
+    }
+    .header-cta:active { transform: scale(0.96); }
+    .header-cta svg { flex-shrink: 0; }
+
+    /* ══════════════════════════════════
+       PARALLAX HERO
+    ══════════════════════════════════ */
+    .hero-wrapper {
       position: relative;
+      height: 100svh;
+      min-height: 560px;
       overflow: hidden;
     }
 
-    .hero::before {
-      content: '';
+    /* Capa de fondo que se mueve con parallax */
+    .hero-bg {
+      position: absolute;
+      inset: -15% 0;           /* extra espacio para el movimiento */
+      background: var(--madera);
+      will-change: transform;
+      /* Patrón de veta de madera */
+      background-image:
+        repeating-linear-gradient(
+          105deg,
+          rgba(255,255,255,0.015) 0px,
+          rgba(255,255,255,0.015) 1px,
+          transparent 1px,
+          transparent 80px
+        ),
+        repeating-linear-gradient(
+          95deg,
+          rgba(255,255,255,0.008) 0px,
+          rgba(255,255,255,0.008) 1px,
+          transparent 1px,
+          transparent 40px
+        );
+      background-color: var(--madera);
+    }
+
+    /* Partículas flotantes decorativas */
+    .hero-particles {
       position: absolute;
       inset: 0;
-      background: repeating-linear-gradient(
-        92deg,
-        rgba(255,255,255,0.02) 0px,
-        rgba(255,255,255,0.02) 1px,
-        transparent 1px,
-        transparent 60px
-      );
       pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      animation: floatUp var(--dur, 8s) var(--delay, 0s) infinite ease-in;
+    }
+    @keyframes floatUp {
+      0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.1; }
+      100% { opacity: 0; transform: translateY(-110vh) scale(1); }
+    }
+
+    /* Gradiente overlay */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(20,12,4,0.55) 0%,
+        rgba(20,12,4,0.2) 40%,
+        rgba(20,12,4,0.65) 100%
+      );
+    }
+
+    /* Contenido del hero */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: calc(var(--header-h) + 20px) 24px 80px;
+      gap: 0;
+      will-change: transform;
+    }
+
+    .hero-logo-big {
+      width: min(220px, 60vw);
+      height: auto;
+      margin-bottom: 32px;
+      filter: drop-shadow(0 4px 24px rgba(0,0,0,0.6));
+      animation: logoReveal 1s ease both;
+    }
+
+    @keyframes logoReveal {
+      from { opacity: 0; transform: translateY(20px) scale(0.9); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .hero-eyebrow {
       display: inline-block;
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.22em;
+      letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: var(--musgo);
-      background: rgba(92, 122, 78, 0.15);
-      border: 1px solid rgba(92, 122, 78, 0.35);
+      color: var(--gold-light);
+      border: 1px solid rgba(201,168,76,0.4);
       padding: 6px 14px;
       border-radius: 2px;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
+      animation: fadeIn 0.9s 0.3s ease both;
     }
 
     .hero h1 {
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(2.4rem, 7vw, 4.8rem);
+      font-size: clamp(2.2rem, 8vw, 5rem);
       font-weight: 900;
       line-height: 1.1;
-      margin-bottom: 20px;
       color: #fff;
+      margin-bottom: 16px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+      animation: fadeIn 0.9s 0.5s ease both;
     }
 
     .hero h1 em {
       font-style: italic;
-      color: var(--crema);
+      color: var(--gold-light);
     }
 
     .hero-sub {
-      font-size: 1rem;
-      color: var(--gris-suave);
-      max-width: 480px;
-      margin: 0 auto 40px;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.75);
+      max-width: 340px;
+      margin: 0 auto 36px;
+      animation: fadeIn 0.9s 0.7s ease both;
     }
 
     .hero-cta {
@@ -101,127 +229,191 @@
       color: #fff;
       font-weight: 600;
       font-size: 1rem;
-      padding: 14px 28px;
+      padding: 15px 28px;
       border-radius: 4px;
       text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 4px 24px rgba(37,211,102,0.45);
+      transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
+      animation: fadeIn 0.9s 0.9s ease both;
+    }
+    .hero-cta:active { transform: scale(0.97); }
+
+    /* Chevron scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: rgba(255,255,255,0.5);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: fadeIn 1s 1.2s ease both, bounce 2s 2s infinite;
+    }
+    .scroll-hint svg { width: 20px; height: 20px; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(6px); }
     }
 
-    .hero-cta:hover {
-      background: var(--wa-osc);
-      transform: translateY(-2px);
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .hero-cta svg { flex-shrink: 0; }
+    /* ══════════════════════════════════
+       STATS BAND (después del hero)
+    ══════════════════════════════════ */
+    .stats-band {
+      background: var(--madera);
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
 
-    /* ── SECCIÓN GALERÍA ── */
+    .stat-item {
+      flex: 1 1 120px;
+      text-align: center;
+      padding: 22px 16px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+    }
+    .stat-item:last-child { border-right: none; }
+
+    .stat-num {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* ══════════════════════════════════
+       GALERÍA
+    ══════════════════════════════════ */
     .galeria-section {
-      padding: 72px 24px 80px;
+      padding: 64px 16px 80px;
       max-width: 1200px;
       margin: 0 auto;
     }
 
     .section-header {
       text-align: center;
-      margin-bottom: 48px;
+      margin-bottom: 40px;
     }
 
     .section-header h2 {
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-size: clamp(1.7rem, 5vw, 2.6rem);
       font-weight: 700;
       color: var(--madera);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
-    .section-header p {
-      color: var(--gris-suave);
-      font-size: 0.95rem;
-    }
+    .section-header p { color: var(--gris-suave); font-size: 0.9rem; }
 
     .divider {
-      width: 48px;
-      height: 3px;
-      background: var(--musgo);
-      margin: 16px auto 0;
+      width: 40px; height: 3px;
+      background: var(--gold);
+      margin: 14px auto 0;
       border-radius: 2px;
     }
 
-    /* Grid masonry-style con columnas CSS */
     .galeria-grid {
-      columns: 1;
-      column-gap: 16px;
+      columns: 2;
+      column-gap: 10px;
     }
-
-    @media (min-width: 500px)  { .galeria-grid { columns: 2; } }
-    @media (min-width: 768px)  { .galeria-grid { columns: 3; } }
-    @media (min-width: 1080px) { .galeria-grid { columns: 4; } }
+    @media (min-width: 600px)  { .galeria-grid { columns: 3; } }
+    @media (min-width: 900px)  { .galeria-grid { columns: 4; } }
 
     .galeria-item {
       break-inside: avoid;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
       position: relative;
       overflow: hidden;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
+      /* Tap highlight en móvil */
+      -webkit-tap-highlight-color: transparent;
     }
 
     .galeria-item img {
       width: 100%;
       display: block;
       transition: transform 0.4s ease;
-      border-radius: 4px;
+      border-radius: 6px;
     }
 
     .galeria-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(59,42,26,0.75) 0%, transparent 55%);
+      background: linear-gradient(to top, rgba(59,42,26,0.8) 0%, transparent 55%);
       opacity: 0;
-      transition: opacity 0.3s ease;
-      border-radius: 4px;
+      transition: opacity 0.25s ease;
+      border-radius: 6px;
       display: flex;
       align-items: flex-end;
-      padding: 14px;
+      padding: 12px;
     }
 
     .galeria-overlay span {
       color: #fff;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
     }
 
-    .galeria-item:hover img { transform: scale(1.05); }
-    .galeria-item:hover .galeria-overlay { opacity: 1; }
+    /* Touch: mostrar overlay solo en móvil */
+    .galeria-item.touched .galeria-overlay { opacity: 1; }
 
-    /* ── PLACEHOLDER para imágenes (mientras el usuario las sube) ── */
+    /* Desktop: solo escalar imagen, sin overlay */
+    @media (hover: hover) {
+      .galeria-item:hover .galeria-overlay { opacity: 0; }
+      .galeria-item:hover img { transform: scale(1.05); }
+    }
+
+    /* PLACEHOLDER */
     .img-placeholder {
       width: 100%;
-      display: block;
-      border-radius: 4px;
-      background: var(--crema);
-      border: 1px solid #D4C4A8;
-      aspect-ratio: var(--ar, 3/4);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      border-radius: 6px;
+      background: var(--crema);
+      border: 1px solid #D4C4A8;
+      aspect-ratio: var(--ar, 3/4);
       color: var(--gris-suave);
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       text-align: center;
       padding: 16px;
       gap: 8px;
     }
-
     .img-placeholder svg { opacity: 0.4; }
 
-    /* ── LIGHTBOX ── */
+    /* ══════════════════════════════════
+       LIGHTBOX
+    ══════════════════════════════════ */
     .lightbox {
       position: fixed;
       inset: 0;
-      background: rgba(15, 10, 5, 0.93);
+      background: rgba(10,6,2,0.95);
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -231,82 +423,68 @@
       pointer-events: none;
       transition: opacity 0.25s;
     }
-
-    .lightbox.activo {
-      opacity: 1;
-      pointer-events: all;
-    }
+    .lightbox.activo { opacity: 1; pointer-events: all; }
 
     .lightbox img {
-      max-width: 90vw;
-      max-height: 88vh;
+      max-width: 92vw;
+      max-height: 85svh;
       border-radius: 4px;
       object-fit: contain;
       transform: scale(0.95);
       transition: transform 0.25s;
     }
-
     .lightbox.activo img { transform: scale(1); }
 
     .lb-cerrar {
-      position: fixed;
-      top: 20px;
-      right: 24px;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 2rem;
-      cursor: pointer;
-      line-height: 1;
-      opacity: 0.7;
+      position: fixed; top: env(safe-area-inset-top, 16px); right: 20px;
+      margin-top: 12px;
+      background: none; border: none;
+      color: #fff; font-size: 2rem;
+      cursor: pointer; opacity: 0.75;
       transition: opacity 0.2s;
+      line-height: 1;
     }
-
     .lb-cerrar:hover { opacity: 1; }
 
     .lb-nav {
-      position: fixed;
-      top: 50%;
+      position: fixed; top: 50%;
       transform: translateY(-50%);
-      background: rgba(255,255,255,0.1);
-      border: none;
-      color: #fff;
-      font-size: 1.8rem;
-      width: 48px;
-      height: 48px;
+      background: rgba(255,255,255,0.12);
+      border: none; color: #fff;
+      font-size: 1.6rem;
+      width: 44px; height: 44px;
       border-radius: 50%;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       transition: background 0.2s;
     }
-
     .lb-nav:hover { background: rgba(255,255,255,0.22); }
-    .lb-prev { left: 16px; }
-    .lb-next { right: 16px; }
+    .lb-prev { left: 12px; }
+    .lb-next { right: 12px; }
 
-    /* ── CTA FINAL ── */
+    /* ══════════════════════════════════
+       CTA FINAL
+    ══════════════════════════════════ */
     .cta-section {
       background: var(--crema);
       border-top: 1px solid #D4C4A8;
       text-align: center;
-      padding: 72px 24px;
+      padding: 64px 24px;
     }
 
     .cta-section h2 {
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
       font-weight: 700;
       color: var(--madera);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .cta-section p {
       color: var(--gris-suave);
-      max-width: 420px;
-      margin: 0 auto 36px;
-      font-size: 0.95rem;
+      max-width: 380px;
+      margin: 0 auto 32px;
+      font-size: 0.9rem;
     }
 
     .cta-wa-btn {
@@ -317,112 +495,181 @@
       color: #fff;
       font-weight: 700;
       font-size: 1.05rem;
-      padding: 16px 36px;
+      padding: 16px 32px;
       border-radius: 4px;
       text-decoration: none;
-      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+      box-shadow: 0 4px 20px rgba(37,211,102,0.3);
       transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
     }
-
+    .cta-wa-btn:active { transform: scale(0.97); }
     .cta-wa-btn:hover {
       background: var(--wa-osc);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 28px rgba(37, 211, 102, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(37,211,102,0.4);
     }
 
-    /* ── BOTÓN FLOTANTE ── */
+    /* ══════════════════════════════════
+       BOTÓN FLOTANTE WA
+    ══════════════════════════════════ */
+    .fb-float {
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+      right: 20px;
+      z-index: 800;
+      background: #1877F2;
+      color: #fff;
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(24,119,242,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .fb-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(24,119,242,0.55); }
+    .fb-float:active { transform: scale(0.96); }
+
     .wa-float {
       position: fixed;
-      bottom: 28px;
-      right: 24px;
-      z-index: 500;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+      right: 20px;
+      z-index: 800;
       background: var(--wa-verde);
       color: #fff;
-      width: 60px;
-      height: 60px;
+      width: 58px; height: 58px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       text-decoration: none;
-      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+      box-shadow: 0 4px 20px rgba(37,211,102,0.4);
       animation: pulso 2.5s infinite;
       transition: transform 0.2s;
     }
-
     .wa-float:hover { transform: scale(1.1); animation: none; }
 
     @keyframes pulso {
-      0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4); }
-      50%       { box-shadow: 0 4px 36px rgba(37,211,102,0.7), 0 0 0 10px rgba(37,211,102,0.1); }
+      0%,100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4); }
+      50%     { box-shadow: 0 4px 36px rgba(37,211,102,0.7), 0 0 0 10px rgba(37,211,102,0.1); }
     }
 
-    /* ── FOOTER ── */
+    /* ══════════════════════════════════
+       FOOTER
+    ══════════════════════════════════ */
     footer {
       background: var(--madera);
       color: var(--gris-suave);
       text-align: center;
-      font-size: 0.8rem;
-      padding: 24px;
+      font-size: 0.78rem;
+      padding: 20px 24px;
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
     }
-
     footer strong { color: var(--crema); }
 
-    /* ── REDUCIR MOVIMIENTO ── */
+    /* ══════════════════════════════════
+       REDUCED MOTION
+    ══════════════════════════════════ */
     @media (prefers-reduced-motion: reduce) {
-      .wa-float { animation: none; }
-      .galeria-item img, .hero-cta, .cta-wa-btn { transition: none; }
+      .wa-float, .particle { animation: none; }
+      .hero-logo-big, .hero-eyebrow, .hero h1, .hero-sub, .hero-cta, .scroll-hint { animation: none; opacity: 1; }
+      .hero-content, .hero-bg { will-change: auto; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HERO -->
-  <header class="hero">
-    <div class="hero-eyebrow">Instalación profesional</div>
-    <h1>Cocinetas<br/><em>de madera</em></h1>
-    <p class="hero-sub">Carpintería funcional y duradera para tu hogar</p>
-    <a class="hero-cta" href="#contacto-wa" id="heroWaBtn">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.561 4.14 1.535 5.878L.057 23.98l6.256-1.641A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.032-1.388l-.36-.214-3.733.978.995-3.63-.234-.374A9.795 9.795 0 012.182 12c0-5.41 4.408-9.818 9.818-9.818 5.41 0 9.818 4.408 9.818 9.818 0 5.41-4.408 9.818-9.818 9.818z"/></svg>
-      Solicitar cotización
+  <!-- ═══ HEADER STICKY ═══ -->
+  <header class="site-header" id="siteHeader">
+    <img
+      src="/img/logo_final.png"
+      alt="Oakstone Cabinets"
+      class="header-logo"
+    />
+    <a class="header-cta" href="#" id="headerWaBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.561 4.14 1.535 5.878L.057 23.98l6.256-1.641A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.032-1.388l-.36-.214-3.733.978.995-3.63-.234-.374A9.795 9.795 0 012.182 12c0-5.41 4.408-9.818 9.818-9.818 5.41 0 9.818 4.408 9.818 9.818 0 5.41-4.408 9.818-9.818 9.818z"/></svg>
+      Get a Quote
     </a>
   </header>
 
-  <!-- GALERÍA -->
-  <section class="galeria-section">
-    <div class="section-header">
-      <h2>Mis trabajos</h2>
-      <p>Cada proyecto, hecho con cuidado y materiales de calidad.</p>
-      <div class="divider"></div>
+  <!-- ═══ PARALLAX HERO ═══ -->
+  <section class="hero-wrapper" aria-label="Hero">
+    <div class="hero-bg" id="heroBg"></div>
+
+    <!-- Partículas doradas flotantes -->
+    <div class="hero-particles" id="heroParticles"></div>
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content" id="heroContent">
+      <img
+        src="/img/logo_final.png"
+        alt="Oakstone Cabinets"
+        class="hero-logo-big"
+      />
+      <div class="hero-eyebrow">Premium Quality Carpentry</div>
+      <p class="hero-sub">Professional installation and lasting finishes for your home. Over 24 completed projects.</p>
+      <a class="hero-cta" href="#" id="heroWaBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.561 4.14 1.535 5.878L.057 23.98l6.256-1.641A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.032-1.388l-.36-.214-3.733.978.995-3.63-.234-.374A9.795 9.795 0 012.182 12c0-5.41 4.408-9.818 9.818-9.818 5.41 0 9.818 4.408 9.818 9.818 0 5.41-4.408 9.818-9.818 9.818z"/></svg>
+        Request a Quote
+      </a>
     </div>
 
-    <div class="galeria-grid" id="galeriaGrid">
-      <!-- Las 24 tarjetas se generan por JS -->
+    <div class="scroll-hint" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      <span>Scroll</span>
     </div>
   </section>
 
-  <!-- CTA FINAL -->
+  <!-- ═══ STATS BAND ═══ -->
+  <div class="stats-band">
+    <div class="stat-item">
+      <span class="stat-num">24+</span>
+      <span class="stat-label">Projects</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">5★</span>
+      <span class="stat-label">Quality</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">Guaranteed</span>
+    </div>
+  </div>
+
+  <!-- ═══ GALERÍA ═══ -->
+  <section class="galeria-section">
+    <div class="section-header">
+      <h2>My Work</h2>
+      <p>Every project crafted with care and quality materials.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="galeria-grid" id="galeriaGrid"></div>
+  </section>
+
+  <!-- ═══ CTA FINAL ═══ -->
   <section class="cta-section" id="contacto-wa">
-    <h2>¿Te gustaría una <em style="font-style:italic;font-family:'Playfair Display',serif">cocineta así</em>?</h2>
-    <p>Escríbeme directamente y con gusto te doy un presupuesto sin compromiso.</p>
+    <h2>Would you like a <em style="font-style:italic;font-family:'Playfair Display',serif">kitchen like this</em>?</h2>
+    <p>Message me directly and I'll be happy to give you a free, no-commitment quote.</p>
     <a class="cta-wa-btn" id="ctaWaBtn" href="#" target="_blank" rel="noopener">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.561 4.14 1.535 5.878L.057 23.98l6.256-1.641A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.032-1.388l-.36-.214-3.733.978.995-3.63-.234-.374A9.795 9.795 0 012.182 12c0-5.41 4.408-9.818 9.818-9.818 5.41 0 9.818 4.408 9.818 9.818 0 5.41-4.408 9.818-9.818 9.818z"/></svg>
-      Contactar por WhatsApp
+      Contact via WhatsApp
     </a>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ═══ FOOTER ═══ -->
   <footer>
-    <strong>Cocinetas de Madera</strong> · Hecho con dedicación · <span id="anio"></span>
+    <strong>Oakstone Cabinets</strong> · Made with dedication · <span id="anio"></span>
   </footer>
 
-  <!-- BOTÓN FLOTANTE WhatsApp -->
-  <a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" title="Contáctame por WhatsApp">
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.561 4.14 1.535 5.878L.057 23.98l6.256-1.641A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.032-1.388l-.36-.214-3.733.978.995-3.63-.234-.374A9.795 9.795 0 012.182 12c0-5.41 4.408-9.818 9.818-9.818 5.41 0 9.818 4.408 9.818 9.818 0 5.41-4.408 9.818-9.818 9.818z"/></svg>
+  <!-- ═══ BOTÓN FLOTANTE FACEBOOK ═══ -->
+  <a class="fb-float" href="https://www.facebook.com/profile.php?id=61591027978383#" target="_blank" rel="noopener" title="Follow us on Facebook">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
   </a>
 
-  <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Vista ampliada">
+  <!-- ═══ BOTÓN FLOTANTE ═══ -->
+  <a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" title="Contact me via WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.561 4.14 1.535 5.878L.057 23.98l6.256-1.641A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.032-1.388l-.36-.214-3.733.978.995-3.63-.234-.374A9.795 9.795 0 012.182 12c0-5.41 4.408-9.818 9.818-9.818 5.41 0 9.818 4.408 9.818 9.818 0 5.41-4.408 9.818-9.818 9.818z"/></svg>
+  </a>
+
+  <!-- ═══ LIGHTBOX ═══ -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
     <button class="lb-cerrar" id="lbCerrar" aria-label="Cerrar">×</button>
     <button class="lb-nav lb-prev" id="lbPrev" aria-label="Anterior">‹</button>
     <img src="" alt="Trabajo ampliado" id="lbImg" />
@@ -433,96 +680,133 @@
     /* ╔══════════════════════════════════════════════════╗
        ║  CONFIGURACIÓN — EDITA SOLO ESTA SECCIÓN        ║
        ╚══════════════════════════════════════════════════╝ */
-
     const CONFIG = {
-      // ⚠️ Pon aquí tu número con código de país, sin +, guiones ni espacios
-      // Ejemplo México: 526561234567
       telefono: '526463907740',
-
-      // Mensaje que llegará al abrirse WhatsApp
-      mensajeWA: 'Hola! Vi tu portafolio de cocinetas de madera y me interesa cotizar una. ¿Podrías darme más información?',
-
-      // ─── IMÁGENES ─────────────────────────────────────
-      // Reemplaza cada ruta con la ruta real de tu imagen.
-      // Puedes poner rutas locales ("fotos/trabajo1.jpg") o URLs.
-      // El campo "titulo" aparece al hacer hover.
+      mensajeWA: 'Hi! I saw your wood kitchen cabinet portfolio and I\'m interested in getting a quote. Could you give me more information?',
       trabajos: [
-        { src: 'img/trabajo01.jpeg', titulo: 'Cocina integral completa' },
-        { src: 'img/trabajo02.jpeg', titulo: 'Gabinetes superiores' },
-        { src: 'img/trabajo03.jpeg', titulo: 'Isla de madera natural' },
-        { src: 'img/trabajo04.jpeg', titulo: 'Alacena a medida' },
-        { src: 'img/trabajo05.jpeg', titulo: 'Cocina pequeña tipo estudio' },
-        { src: 'img/trabajo06.jpeg', titulo: 'Detalle de herrajes' },
-        { src: 'img/trabajo07.jpeg', titulo: 'Acabado nogal americano' },
-        { src: 'img/trabajo08.jpeg', titulo: 'Cocina lineal con desayunador' },
-        { src: 'img/trabajo09.jpeg', titulo: 'Puertas con moldura clásica' },
-        { src: 'img/trabajo10.jpeg', titulo: 'Instalación en departamento' },
-        { src: 'img/trabajo11.jpeg', titulo: 'Madera de pino barnizado' },
-        { src: 'img/trabajo12.jpeg', titulo: 'Gabinetes blancos texturizados' },
-        { src: 'img/trabajo13.jpeg', titulo: 'Cocina con cubierta de granito' },
-        { src: 'img/trabajo14.jpeg', titulo: 'Closet de cocina empotrado' },
-        { src: 'img/trabajo15.jpeg', titulo: 'Esquinero con cajones' },
-        { src: 'img/trabajo16.jpeg', titulo: 'Cocina rústica de encino' },
-        { src: 'img/trabajo17.jpeg', titulo: 'Diseño en L para espacio amplio' },
-        { src: 'img/trabajo18.jpeg', titulo: 'Cajones con cierre suave' },
-        { src: 'img/trabajo19.jpeg', titulo: 'Tono wengue moderno' },
-        { src: 'img/trabajo20.jpeg', titulo: 'Cocina completa vista panorámica' },
-        { src: 'img/trabajo21.jpeg', titulo: 'Acabado lacado mate' },
-        { src: 'img/trabajo22.jpeg', titulo: 'Zona de lavado integrada' },
-        { src: 'img/trabajo23.jpeg', titulo: 'Detalle interior de cajones' },
-        { src: 'img/trabajo24.jpeg', titulo: 'Entrega de proyecto terminado' },
+        { src: 'img/trabajo01.jpeg', titulo: 'Full Kitchen Set' },
+        { src: 'img/trabajo02.jpeg', titulo: 'Upper Cabinets' },
+        { src: 'img/trabajo03.jpeg', titulo: 'Natural Wood Island' },
+        { src: 'img/trabajo04.jpeg', titulo: 'Custom Pantry' },
+        { src: 'img/trabajo05.jpeg', titulo: 'Studio-Style Small Kitchen' },
+        { src: 'img/trabajo06.jpeg', titulo: 'Hardware Detail' },
+        { src: 'img/trabajo07.jpeg', titulo: 'American Walnut Finish' },
+        { src: 'img/trabajo08.jpeg', titulo: 'Linear Kitchen with Breakfast Bar' },
+        { src: 'img/trabajo09.jpeg', titulo: 'Classic Molding Doors' },
+        { src: 'img/trabajo10.jpeg', titulo: 'Apartment Installation' },
+        { src: 'img/trabajo11.jpeg', titulo: 'Varnished Pine Wood' },
+        { src: 'img/trabajo12.jpeg', titulo: 'Textured White Cabinets' },
+        { src: 'img/trabajo13.jpeg', titulo: 'Kitchen with Granite Countertop' },
+        { src: 'img/trabajo14.mp4', titulo: 'Built-in Kitchen Closet' },
+        { src: 'img/trabajo15.jpeg', titulo: 'Corner Unit with Drawers' },
+        { src: 'img/trabajo16.jpeg', titulo: 'Rustic Oak Kitchen' },
+        { src: 'img/trabajo18.jpeg', titulo: 'Soft-Close Drawers' },
+        { src: 'img/trabajo19.jpeg', titulo: 'Modern Wenge Tone' },
+        { src: 'img/trabajo20.jpeg', titulo: 'Full Kitchen Panoramic View' },
+        { src: 'img/trabajo21.jpeg', titulo: 'Matte Lacquered Finish' },
+        { src: 'img/trabajo22.jpeg', titulo: 'Integrated Sink Area' },
+        { src: 'img/trabajo23.jpeg', titulo: 'Drawer Interior Detail' },
+        { src: 'img/trabajo24.jpeg', titulo: 'Completed Project Delivery' },
       ]
     };
 
-    /* ════════════════════════════════════════════════════
-       LÓGICA — no necesitas modificar nada de aquí abajo
-       ════════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════
+       LÓGICA
+    ══════════════════════════════════════════════════ */
 
-    // ── Año en footer ──
+    // Año footer
     document.getElementById('anio').textContent = new Date().getFullYear();
 
-    // ── Construir URL de WhatsApp ──
+    // WhatsApp URLs
     function urlWA() {
       return `https://wa.me/${CONFIG.telefono}?text=${encodeURIComponent(CONFIG.mensajeWA)}`;
     }
-
-    // Asignar a todos los botones
-    ['heroWaBtn', 'ctaWaBtn', 'waFloat'].forEach(id => {
-      document.getElementById(id).href = urlWA();
+    ['heroWaBtn','ctaWaBtn','waFloat','headerWaBtn'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.href = urlWA();
     });
 
-    // ── Renderizar galería ──
+    /* ── PARALLAX (JS-driven para compatibilidad móvil) ── */
+    const heroBg      = document.getElementById('heroBg');
+    const heroContent = document.getElementById('heroContent');
+    const header      = document.getElementById('siteHeader');
+    let ticking = false;
+
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const y = window.scrollY;
+
+          // Header: vuelve opaco al bajar
+          if (y > 30) {
+            header.classList.add('scrolled');
+          } else {
+            header.classList.remove('scrolled');
+          }
+
+          // Parallax: bg se mueve más lento que el scroll
+          heroBg.style.transform = `translateY(${y * 0.45}px)`;
+          // Contenido sube un poco más rápido (efecto profundidad)
+          heroContent.style.transform = `translateY(${y * 0.18}px)`;
+
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    /* ── Partículas doradas ── */
+    const particleContainer = document.getElementById('heroParticles');
+    const particleData = [
+      { x:'12%', size:3, dur:'9s',  delay:'0s'   },
+      { x:'28%', size:2, dur:'12s', delay:'1.5s' },
+      { x:'45%', size:4, dur:'8s',  delay:'3s'   },
+      { x:'60%', size:2, dur:'14s', delay:'0.5s' },
+      { x:'75%', size:3, dur:'10s', delay:'2s'   },
+      { x:'88%', size:2, dur:'11s', delay:'4s'   },
+      { x:'20%', size:2, dur:'13s', delay:'5s'   },
+      { x:'55%', size:3, dur:'9s',  delay:'6s'   },
+    ];
+    particleData.forEach(p => {
+      const el = document.createElement('div');
+      el.className = 'particle';
+      el.style.cssText = `left:${p.x};bottom:-10px;width:${p.size}px;height:${p.size}px;--dur:${p.dur};--delay:${p.delay}`;
+      particleContainer.appendChild(el);
+    });
+
+    /* ── Galería ── */
     const grid = document.getElementById('galeriaGrid');
-    const iconoPlaceholder = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`;
+    const iconoPlaceholder = `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`;
+    const ratios = ['3/4','4/5','1/1','4/3','3/4','2/3'];
 
     CONFIG.trabajos.forEach((t, i) => {
       const item = document.createElement('div');
       item.className = 'galeria-item';
       item.dataset.idx = i;
-
-      // Aspect-ratio variado para dar ritmo al masonry
-      const ratios = ['3/4','4/5','1/1','4/3','3/4','2/3'];
       const ar = ratios[i % ratios.length];
 
       item.innerHTML = `
-        <img
-          src="${t.src}"
-          alt="${t.titulo}"
-          loading="lazy"
-          onerror="this.style.display='none';this.nextElementSibling.querySelector('.img-placeholder').style.display='flex'"
-        />
-        <div style="display:none"><div class="img-placeholder" style="--ar:${ar}">${iconoPlaceholder}<span>Foto ${i + 1}<br/><small>${t.titulo}</small></span></div></div>
+        <img src="${t.src}" alt="${t.titulo}" loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.querySelector('.img-placeholder').style.display='flex'" />
+        <div style="display:none"><div class="img-placeholder" style="--ar:${ar}">${iconoPlaceholder}<span>Foto ${i+1}<br/><small>${t.titulo}</small></span></div></div>
         <div class="galeria-overlay"><span>${t.titulo}</span></div>
       `;
+
+      // Touch feedback
+      item.addEventListener('touchstart', () => item.classList.add('touched'), { passive: true });
+      item.addEventListener('touchend', () => setTimeout(() => item.classList.remove('touched'), 600), { passive: true });
 
       item.addEventListener('click', () => abrirLightbox(i));
       grid.appendChild(item);
     });
 
-    // ── Lightbox ──
-    const lb      = document.getElementById('lightbox');
-    const lbImg   = document.getElementById('lbImg');
+    /* ── Lightbox ── */
+    const lb    = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
     let lbIdx = 0;
+    let touchStartX = 0;
 
     function abrirLightbox(idx) {
       lbIdx = idx;
@@ -554,11 +838,21 @@
       lbImg.alt = CONFIG.trabajos[lbIdx].titulo;
     });
 
+    // Swipe en lightbox para móvil
+    lb.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) document.getElementById('lbNext').click();
+        else        document.getElementById('lbPrev').click();
+      }
+    }, { passive: true });
+
     document.addEventListener('keydown', e => {
       if (!lb.classList.contains('activo')) return;
-      if (e.key === 'Escape')      cerrarLightbox();
-      if (e.key === 'ArrowLeft')   document.getElementById('lbPrev').click();
-      if (e.key === 'ArrowRight')  document.getElementById('lbNext').click();
+      if (e.key === 'Escape')    cerrarLightbox();
+      if (e.key === 'ArrowLeft') document.getElementById('lbPrev').click();
+      if (e.key === 'ArrowRight')document.getElementById('lbNext').click();
     });
   </script>
 </body>
