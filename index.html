@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cocinetas de Madera · Artesanía en cada detalle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Variables ── */
+    :root {
+      --hueso:     #F7F0E3;
+      --crema:     #EDE0C8;
+      --madera:    #3B2A1A;
+      --musgo:     #5C7A4E;
+      --musgo-osc: #4A6340;
+      --texto:     #2A1E10;
+      --gris-suave:#A09080;
+      --wa-verde:  #25D366;
+      --wa-osc:    #1DA851;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--hueso);
+      color: var(--texto);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--madera);
+      color: var(--crema);
+      padding: 80px 24px 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        92deg,
+        rgba(255,255,255,0.02) 0px,
+        rgba(255,255,255,0.02) 1px,
+        transparent 1px,
+        transparent 60px
+      );
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--musgo);
+      background: rgba(92, 122, 78, 0.15);
+      border: 1px solid rgba(92, 122, 78, 0.35);
+      padding: 6px 14px;
+      border-radius: 2px;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.4rem, 7vw, 4.8rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--crema);
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--gris-suave);
+      max-width: 480px;
+      margin: 0 auto 40px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--wa-verde);
+      color: #fff;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 14px 28px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .hero-cta:hover {
+      background: var(--wa-osc);
+      transform: translateY(-2px);
+    }
+
+    .hero-cta svg { flex-shrink: 0; }
+
+    /* ── SECCIÓN GALERÍA ── */
+    .galeria-section {
+      padding: 72px 24px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-header h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--madera);
+      margin-bottom: 10px;
+    }
+
+    .section-header p {
+      color: var(--gris-suave);
+      font-size: 0.95rem;
+    }
+
+    .divider {
+      width: 48px;
+      height: 3px;
+      background: var(--musgo);
+      margin: 16px auto 0;
+      border-radius: 2px;
+    }
+
+    /* Grid masonry-style con columnas CSS */
+    .galeria-grid {
+      columns: 1;
+      column-gap: 16px;
+    }
+
+    @media (min-width: 500px)  { .galeria-grid { columns: 2; } }
+    @media (min-width: 768px)  { .galeria-grid { columns: 3; } }
+    @media (min-width: 1080px) { .galeria-grid { columns: 4; } }
+
+    .galeria-item {
+      break-inside: avoid;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .galeria-item img {
+      width: 100%;
+      display: block;
+      transition: transform 0.4s ease;
+      border-radius: 4px;
+    }
+
+    .galeria-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(59,42,26,0.75) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 4px;
+      display: flex;
+      align-items: flex-end;
+      padding: 14px;
+    }
+
+    .galeria-overlay span {
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .galeria-item:hover img { transform: scale(1.05); }
+    .galeria-item:hover .galeria-overlay { opacity: 1; }
+
+    /* ── PLACEHOLDER para imágenes (mientras el usuario las sube) ── */
+    .img-placeholder {
+      width: 100%;
+      display: block;
+      border-radius: 4px;
+      background: var(--crema);
+      border: 1px solid #D4C4A8;
+      aspect-ratio: var(--ar, 3/4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--gris-suave);
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 16px;
+      gap: 8px;
+    }
+
+    .img-placeholder svg { opacity: 0.4; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 10, 5, 0.93);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+
+    .lightbox.activo {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 88vh;
+      border-radius: 4px;
+      object-fit: contain;
+      transform: scale(0.95);
+      transition: transform 0.25s;
+    }
+
+    .lightbox.activo img { transform: scale(1); }
+
+    .lb-cerrar {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .lb-cerrar:hover { opacity: 1; }
+
+    .lb-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #fff;
+      font-size: 1.8rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .lb-nav:hover { background: rgba(255,255,255,0.22); }
+    .lb-prev { left: 16px; }
+    .lb-next { right: 16px; }
+
+    /* ── CTA FINAL ── */
+    .cta-section {
+      background: var(--crema);
+      border-top: 1px solid #D4C4A8;
+      text-align: center;
+      padding: 72px 24px;
+    }
+
+    .cta-section h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      font-weight: 700;
+      color: var(--madera);
+      margin-bottom: 14px;
+    }
+
+    .cta-section p {
+      color: var(--gris-suave);
+      max-width: 420px;
+      margin: 0 auto 36px;
+      font-size: 0.95rem;
+    }
+
+    .cta-wa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--wa-verde);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 16px 36px;
+      border-radius: 4px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+
+    .cta-wa-btn:hover {
+      background: var(--wa-osc);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(37, 211, 102, 0.4);
+    }
+
+    /* ── BOTÓN FLOTANTE ── */
+    .wa-float {
+      position: fixed;
+      bottom: 28px;
+      right: 24px;
+      z-index: 500;
+      background: var(--wa-verde);
+      color: #fff;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+      animation: pulso 2.5s infinite;
+      transition: transform 0.2s;
+    }
+
+    .wa-float:hover { transform: scale(1.1); animation: none; }
+
+    @keyframes pulso {
+      0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4); }
+      50%       { box-shadow: 0 4px 36px rgba(37,211,102,0.7), 0 0 0 10px rgba(37,211,102,0.1); }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--madera);
+      color: var(--gris-suave);
+      text-align: center;
+      font-size: 0.8rem;
+      padding: 24px;
+    }
+
+    footer strong { color: var(--crema); }
+
+    /* ── REDUCIR MOVIMIENTO ── */
+    @media (prefers-reduced-motion: reduce) {
+      .wa-float { animation: none; }
+      .galeria-item img, .hero-cta, .cta-wa-btn { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-eyebrow">Instalación profesional</div>
+    <h1>Cocinetas<br/><em>de madera</em></h1>
+    <p class="hero-sub">Carpintería funcional y duradera para tu hogar. Más de 24 proyectos realizados con atención al detalle.</p>
+    <a class="hero-cta" href="#contacto-wa" id="heroWaBtn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.561 4.14 1.535 5.878L.057 23.98l6.256-1.641A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.032-1.388l-.36-.214-3.733.978.995-3.63-.234-.374A9.795 9.795 0 012.182 12c0-5.41 4.408-9.818 9.818-9.818 5.41 0 9.818 4.408 9.818 9.818 0 5.41-4.408 9.818-9.818 9.818z"/></svg>
+      Solicitar cotización
+    </a>
+  </header>
+
+  <!-- GALERÍA -->
+  <section class="galeria-section">
+    <div class="section-header">
+      <h2>Mis trabajos</h2>
+      <p>Cada proyecto, hecho con cuidado y materiales de calidad.</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="galeria-grid" id="galeriaGrid">
+      <!-- Las 24 tarjetas se generan por JS -->
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-section" id="contacto-wa">
+    <h2>¿Te gustaría una <em style="font-style:italic;font-family:'Playfair Display',serif">cocineta así</em>?</h2>
+    <p>Escríbeme directamente y con gusto te doy un presupuesto sin compromiso.</p>
+    <a class="cta-wa-btn" id="ctaWaBtn" href="#" target="_blank" rel="noopener">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.561 4.14 1.535 5.878L.057 23.98l6.256-1.641A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.032-1.388l-.36-.214-3.733.978.995-3.63-.234-.374A9.795 9.795 0 012.182 12c0-5.41 4.408-9.818 9.818-9.818 5.41 0 9.818 4.408 9.818 9.818 0 5.41-4.408 9.818-9.818 9.818z"/></svg>
+      Contactar por WhatsApp
+    </a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <strong>Cocinetas de Madera</strong> · Hecho con dedicación · <span id="anio"></span>
+  </footer>
+
+  <!-- BOTÓN FLOTANTE WhatsApp -->
+  <a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" title="Contáctame por WhatsApp">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.561 4.14 1.535 5.878L.057 23.98l6.256-1.641A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.032-1.388l-.36-.214-3.733.978.995-3.63-.234-.374A9.795 9.795 0 012.182 12c0-5.41 4.408-9.818 9.818-9.818 5.41 0 9.818 4.408 9.818 9.818 0 5.41-4.408 9.818-9.818 9.818z"/></svg>
+  </a>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Vista ampliada">
+    <button class="lb-cerrar" id="lbCerrar" aria-label="Cerrar">×</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Anterior">‹</button>
+    <img src="" alt="Trabajo ampliado" id="lbImg" />
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Siguiente">›</button>
+  </div>
+
+  <script>
+    /* ╔══════════════════════════════════════════════════╗
+       ║  CONFIGURACIÓN — EDITA SOLO ESTA SECCIÓN        ║
+       ╚══════════════════════════════════════════════════╝ */
+
+    const CONFIG = {
+      // ⚠️ Pon aquí tu número con código de país, sin +, guiones ni espacios
+      // Ejemplo México: 526561234567
+      telefono: '526463907740',
+
+      // Mensaje que llegará al abrirse WhatsApp
+      mensajeWA: 'Hola! Vi tu portafolio de cocinetas de madera y me interesa cotizar una. ¿Podrías darme más información?',
+
+      // ─── IMÁGENES ─────────────────────────────────────
+      // Reemplaza cada ruta con la ruta real de tu imagen.
+      // Puedes poner rutas locales ("fotos/trabajo1.jpg") o URLs.
+      // El campo "titulo" aparece al hacer hover.
+      trabajos: [
+        { src: 'img/trabajo01.jpeg', titulo: 'Cocina integral completa' },
+        { src: 'img/trabajo02.jpeg', titulo: 'Gabinetes superiores' },
+        { src: 'img/trabajo03.jpeg', titulo: 'Isla de madera natural' },
+        { src: 'img/trabajo04.jpeg', titulo: 'Alacena a medida' },
+        { src: 'img/trabajo05.jpeg', titulo: 'Cocina pequeña tipo estudio' },
+        { src: 'img/trabajo06.jpeg', titulo: 'Detalle de herrajes' },
+        { src: 'img/trabajo07.jpeg', titulo: 'Acabado nogal americano' },
+        { src: 'img/trabajo08.jpeg', titulo: 'Cocina lineal con desayunador' },
+        { src: 'img/trabajo09.jpeg', titulo: 'Puertas con moldura clásica' },
+        { src: 'img/trabajo10.jpeg', titulo: 'Instalación en departamento' },
+        { src: 'img/trabajo11.jpeg', titulo: 'Madera de pino barnizado' },
+        { src: 'img/trabajo12.jpeg', titulo: 'Gabinetes blancos texturizados' },
+        { src: 'img/trabajo13.jpeg', titulo: 'Cocina con cubierta de granito' },
+        { src: 'img/trabajo14.jpeg', titulo: 'Closet de cocina empotrado' },
+        { src: 'img/trabajo15.jpeg', titulo: 'Esquinero con cajones' },
+        { src: 'img/trabajo16.jpeg', titulo: 'Cocina rústica de encino' },
+        { src: 'img/trabajo17.jpeg', titulo: 'Diseño en L para espacio amplio' },
+        { src: 'img/trabajo18.jpeg', titulo: 'Cajones con cierre suave' },
+        { src: 'img/trabajo19.jpeg', titulo: 'Tono wengue moderno' },
+        { src: 'img/trabajo20.jpeg', titulo: 'Cocina completa vista panorámica' },
+        { src: 'img/trabajo21.jpeg', titulo: 'Acabado lacado mate' },
+        { src: 'img/trabajo22.jpeg', titulo: 'Zona de lavado integrada' },
+        { src: 'img/trabajo23.jpeg', titulo: 'Detalle interior de cajones' },
+        { src: 'img/trabajo24.jpeg', titulo: 'Entrega de proyecto terminado' },
+      ]
+    };
+
+    /* ════════════════════════════════════════════════════
+       LÓGICA — no necesitas modificar nada de aquí abajo
+       ════════════════════════════════════════════════════ */
+
+    // ── Año en footer ──
+    document.getElementById('anio').textContent = new Date().getFullYear();
+
+    // ── Construir URL de WhatsApp ──
+    function urlWA() {
+      return `https://wa.me/${CONFIG.telefono}?text=${encodeURIComponent(CONFIG.mensajeWA)}`;
+    }
+
+    // Asignar a todos los botones
+    ['heroWaBtn', 'ctaWaBtn', 'waFloat'].forEach(id => {
+      document.getElementById(id).href = urlWA();
+    });
+
+    // ── Renderizar galería ──
+    const grid = document.getElementById('galeriaGrid');
+    const iconoPlaceholder = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`;
+
+    CONFIG.trabajos.forEach((t, i) => {
+      const item = document.createElement('div');
+      item.className = 'galeria-item';
+      item.dataset.idx = i;
+
+      // Aspect-ratio variado para dar ritmo al masonry
+      const ratios = ['3/4','4/5','1/1','4/3','3/4','2/3'];
+      const ar = ratios[i % ratios.length];
+
+      item.innerHTML = `
+        <img
+          src="${t.src}"
+          alt="${t.titulo}"
+          loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.querySelector('.img-placeholder').style.display='flex'"
+        />
+        <div style="display:none"><div class="img-placeholder" style="--ar:${ar}">${iconoPlaceholder}<span>Foto ${i + 1}<br/><small>${t.titulo}</small></span></div></div>
+        <div class="galeria-overlay"><span>${t.titulo}</span></div>
+      `;
+
+      item.addEventListener('click', () => abrirLightbox(i));
+      grid.appendChild(item);
+    });
+
+    // ── Lightbox ──
+    const lb      = document.getElementById('lightbox');
+    const lbImg   = document.getElementById('lbImg');
+    let lbIdx = 0;
+
+    function abrirLightbox(idx) {
+      lbIdx = idx;
+      lbImg.src = CONFIG.trabajos[idx].src;
+      lbImg.alt = CONFIG.trabajos[idx].titulo;
+      lb.classList.add('activo');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarLightbox() {
+      lb.classList.remove('activo');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('lbCerrar').addEventListener('click', cerrarLightbox);
+    lb.addEventListener('click', e => { if (e.target === lb) cerrarLightbox(); });
+
+    document.getElementById('lbPrev').addEventListener('click', e => {
+      e.stopPropagation();
+      lbIdx = (lbIdx - 1 + CONFIG.trabajos.length) % CONFIG.trabajos.length;
+      lbImg.src = CONFIG.trabajos[lbIdx].src;
+      lbImg.alt = CONFIG.trabajos[lbIdx].titulo;
+    });
+
+    document.getElementById('lbNext').addEventListener('click', e => {
+      e.stopPropagation();
+      lbIdx = (lbIdx + 1) % CONFIG.trabajos.length;
+      lbImg.src = CONFIG.trabajos[lbIdx].src;
+      lbImg.alt = CONFIG.trabajos[lbIdx].titulo;
+    });
+
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('activo')) return;
+      if (e.key === 'Escape')      cerrarLightbox();
+      if (e.key === 'ArrowLeft')   document.getElementById('lbPrev').click();
+      if (e.key === 'ArrowRight')  document.getElementById('lbNext').click();
+    });
+  </script>
+</body>
+</html>
